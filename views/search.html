@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ค้นหาหนังสือ - Book Request System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body, html { height: 100%; margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8f9fa; }
+        .navbar { background-color: #ffffff; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .nav-link.active { color: #0d6efd !important; font-weight: bold; border-bottom: 2px solid #0d6efd; }
+
+        /* --- สถานะ 1: ค้นหาหลัก --- */
+        #searchView {
+            height: calc(100vh - 60px);
+            background: linear-gradient(rgba(0, 43, 94, 0.4), rgba(0, 43, 94, 0.4)), url('https://images.unsplash.com/photo-1541963463532-d68292c34b19?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;
+            display: flex; align-items: center; justify-content: center; flex-direction: column; transition: opacity 0.5s ease-out;
+        }
+        .search-main-title { color: white; font-weight: 800; font-size: 2.5rem; text-shadow: 0 2px 10px rgba(0,0,0,0.5); margin-bottom: 5px; }
+        .search-card { background: rgba(255, 255, 255, 0.95); border-radius: 16px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); width: 100%; max-width: 800px; padding: 30px; }
+        .input-group-text { background: transparent; border-right: none; color: #6c757d; }
+        .form-control { border-left: none; }
+        .form-control:focus { box-shadow: none; border-color: #dee2e6; }
+        .input-group:focus-within { box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25); border-radius: 0.375rem; }
+
+        /* --- สถานะ 2: ผลลัพธ์ --- */
+        #resultView { display: none; padding: 40px 0; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Header สำหรับกรณีไม่พบในห้องสมุด (ตาม Prototype) */
+        .external-header {
+            text-align: center;
+            padding: 40px 20px 60px;
+            background: radial-gradient(circle at top, #eef2f8 0%, #f8f9fa 100%);
+            border-radius: 20px;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        .external-icon-box {
+            width: 60px; height: 60px;
+            background: #fff;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin: 0 auto 20px;
+            font-size: 1.5rem; color: #d97706; /* สีส้มอมน้ำตาล */
+        }
+        .cache-icon-box { color: #0d6efd; } /* สีน้ำเงินสำหรับ Cache */
+
+        /* การ์ดแนวนอน (เจอในห้องสมุด) */
+        .result-card-horizontal {
+            background: #fff; border-radius: 16px; border: 1px solid #e9ecef;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03); margin-bottom: 20px; display: flex; overflow: hidden;
+        }
+        .result-img-h { width: 200px; background: #f1f3f5; display: flex; align-items: center; justify-content: center; color: #adb5bd; border-right: 1px solid #e9ecef; }
+        .result-content-h { padding: 30px; flex-grow: 1; }
+
+        /* การ์ดแนวตั้ง (เจอจากภายนอก/Cache - ตาม Prototype) */
+        .result-card-vertical {
+            background: #fff; border-radius: 16px; border: 1px solid #edf2f9;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04); transition: transform 0.2s, box-shadow 0.2s;
+            height: 100%; display: flex; flex-direction: column; overflow: hidden;
+        }
+        .result-card-vertical:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0,0,0,0.08); }
+        .result-img-v { height: 220px; background: #f8f9fa; display: flex; align-items: center; justify-content: center; color: #adb5bd; border-bottom: 1px solid #f1f3f5; }
+        .result-content-v { padding: 25px; display: flex; flex-direction: column; flex-grow: 1; }
+        
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: auto; padding-top: 20px; }
+        .info-label { font-size: 0.7rem; color: #6c757d; font-weight: 600; text-transform: uppercase; margin-bottom: 2px; }
+        .info-value { font-weight: 600; color: #343a40; font-size: 0.85rem; }
+
+        /* กล่อง "กรอกข้อมูลด้วยตนเอง" (จาก Prototype Cache) */
+        .manual-entry-card {
+            background: transparent; border: 2px dashed #dee2e6; border-radius: 16px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            height: 100%; min-height: 400px; color: #6c757d; transition: 0.2s; cursor: pointer;
+        }
+        .manual-entry-card:hover { border-color: #0d6efd; background: rgba(13, 110, 253, 0.02); color: #0d6efd; }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg sticky-top">
+    <!-- ... Navbar เหมือนหน้าอื่น ... -->
+    <div class="container">
+        <a class="navbar-brand text-primary fw-bold" href="/search.html"><i class="bi bi-book-half me-2"></i>Book Request System</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mx-auto">
+                <li class="nav-item"><a class="nav-link active" href="#" onclick="location.reload()">ค้นหาหนังสือ</a></li>
+                <li class="nav-item"><a class="nav-link" href="/my-requests.html">คำร้องของฉัน</a></li>
+            </ul>
+            <div class="d-flex align-items-center gap-3">
+                <span class="text-secondary fw-semibold" id="userNameDisplay"></span>
+                <button class="btn btn-outline-danger btn-sm rounded-pill px-4" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- ================= สถานะ 1: ค้นหาหลัก ================= -->
+<div id="searchView">
+    <h1 class="search-main-title">ระบบเสนอแนะหนังสือเข้าห้องสมุด</h1>
+    <p class="text-white opacity-75 mb-4">ค้นหาหนังสือที่ต้องการเสนอให้ห้องสมุดพิจารณาสั่งซื้อ</p>
+    <div class="search-card">
+        <form id="mainSearchForm">
+            <!-- ซ่อนไว้เพื่อความกระชับ โค้ดฟอร์มเดิม -->
+            <div class="mb-3">
+                <label class="form-label small fw-bold">คำค้นหาทั่วไป (Keyword)</label>
+                <div class="input-group"><span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input type="text" id="s_kw" class="form-control" placeholder="เช่น Python, AI"></div>
+            </div>
+            <div class="row g-3 mb-4">
+                <div class="col-md-6"><label class="form-label small fw-bold">ชื่อหนังสือ</label><div class="input-group"><span class="input-group-text"><i class="bi bi-journal-text"></i></span><input type="text" id="s_title" class="form-control"></div></div>
+                <div class="col-md-6"><label class="form-label small fw-bold">ชื่อผู้แต่ง</label><div class="input-group"><span class="input-group-text"><i class="bi bi-person"></i></span><input type="text" id="s_author" class="form-control"></div></div>
+            </div>
+            <button type="submit" class="btn btn-primary w-100 py-3 fw-bold shadow-sm"><i class="bi bi-search me-2"></i> ค้นหาหนังสือ</button>
+        </form>
+    </div>
+</div>
+
+<!-- ================= สถานะ 2: ผลลัพธ์ ================= -->
+<div id="resultView" class="container">
+    
+    <!-- ส่วนหัว (Header) ที่จะเปลี่ยนไปตามแหล่งข้อมูล -->
+    <div id="dynamicHeader"></div>
+
+    <div id="loadingState" class="text-center py-5 d-none">
+        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div>
+        <h5 class="mt-3 text-secondary">กำลังค้นหาข้อมูลจากทุกแหล่ง...</h5>
+    </div>
+
+    <!-- ส่วนเนื้อหาการ์ด -->
+    <div class="row g-4" id="resultsContainer"></div>
+
+</div>
+
+<script src="/js/app.js"></script>
+<script>
+    checkAuth('USER');
+    const user = getUser();
+    if(user) document.getElementById('userNameDisplay').innerHTML = `<i class="bi bi-person-circle me-1"></i> ${user.full_name}`;
+
+    document.getElementById('mainSearchForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const kw = document.getElementById('s_kw').value;
+        const title = document.getElementById('s_title').value;
+        const author = document.getElementById('s_author').value;
+
+        if (!kw && !title && !author) {
+            Swal.fire({ icon: 'warning', text: 'กรุณากรอกข้อมูลอย่างน้อย 1 ช่อง' });
+            return;
+        }
+
+        document.getElementById('searchView').style.display = 'none';
+        document.getElementById('resultView').style.display = 'block';
+        
+        const container = document.getElementById('resultsContainer');
+        const header = document.getElementById('dynamicHeader');
+        const loading = document.getElementById('loadingState');
+        
+        container.innerHTML = '';
+        header.innerHTML = '';
+        loading.classList.remove('d-none');
+
+        try {
+            const res = await fetch(`/api/books/search?keyword=${kw}&title=${title}&author=${author}`, { 
+                headers: { 'Authorization': `Bearer ${getToken()}` } 
+            });
+            const result = await res.json();
+            loading.classList.add('d-none');
+
+            if (result.data && result.data.books && result.data.books.length > 0) {
+                const isLib = result.data.library_exists;
+                // เช็คว่าข้อมูลมาจากไหน (library, cache, crawler)
+                const source = result.data.source || (isLib ? 'library' : 'external'); 
+
+                // --- 1. จัดการ Header ตาม Source ---
+                if (isLib) {
+                    header.innerHTML = `
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div>
+                                <h2 class="fw-bold text-dark m-0">ผลการค้นหา</h2>
+                                <span class="badge bg-success bg-opacity-10 text-success border border-success px-3 py-2 mt-2"><i class="bi bi-check-circle-fill me-1"></i> พบหนังสือในห้องสมุด</span>
+                            </div>
+                            <button class="btn btn-outline-secondary rounded-pill" onclick="location.reload()">ค้นหาใหม่</button>
+                        </div>`;
+                } else {
+                    // ดีไซน์สำหรับ External / Cache ตามภาพ Prototype
+                    let iconClass = source === 'crawler' ? 'bi-globe2' : 'bi-search';
+                    let iconColorClass = source === 'crawler' ? 'external-icon-box' : 'external-icon-box cache-icon-box';
+                    let subText = source === 'crawler' ? 'พบหนังสือที่เกี่ยวข้องจากแหล่งข้อมูลภายนอก (Web Crawler)' : 'พบข้อมูลจากประวัติการค้นหา (Cache)';
+                    
+                    header.innerHTML = `
+                        <div class="external-header">
+                            <div class="d-flex justify-content-between w-100 position-absolute top-0 start-0 p-3">
+                                <span class="text-muted small fw-bold">Search Result - ${source.toUpperCase()}</span>
+                                <button class="btn btn-sm btn-outline-secondary" onclick="location.reload()">ค้นหาใหม่</button>
+                            </div>
+                            <div class="${iconColorClass}"><i class="bi ${iconClass}"></i></div>
+                            <h2 class="fw-bold text-dark mb-2">ไม่พบหนังสือในห้องสมุด</h2>
+                            <p class="text-muted">${subText} คุณสามารถเลือกเพื่อดำเนินการต่อได้</p>
+                        </div>`;
+                }
+
+                // --- 2. จัดการหน้าตาการ์ดตาม Source ---
+                result.data.books.forEach(book => {
+                    const bookJson = encodeURIComponent(JSON.stringify(book));
+                    
+                    if (isLib) {
+                        // การ์ดแนวนอน (มีในห้องสมุดแล้ว - ห้ามขอ)
+                        container.innerHTML += `
+                            <div class="col-12">
+                                <div class="result-card-horizontal">
+                                    <div class="result-img-h d-none d-md-flex"><i class="bi bi-journal-bookmark-fill" style="font-size: 4rem;"></i></div>
+                                    <div class="result-content-h">
+                                        <h3 class="fw-bold mb-1">${book.title}</h3>
+                                        <p class="text-muted"><i class="bi bi-person me-2"></i>${book.author}</p>
+                                        <div class="bg-success bg-opacity-10 text-success text-center p-3 rounded mt-3 fw-bold border border-success border-opacity-25">
+                                            <i class="bi bi-book-fill me-2"></i> มีหนังสือเล่มนี้ในห้องสมุดแล้ว
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`;
+                    } else {
+                        // การ์ดแนวตั้ง (External/Cache - นำไปขอได้) ตาม Prototype
+                        container.innerHTML += `
+                            <div class="col-md-6 col-lg-4">
+                                <div class="result-card-vertical">
+                                    <div class="result-img-v"><i class="bi bi-book" style="font-size: 5rem;"></i></div>
+                                    <div class="result-content-v">
+                                        <h5 class="fw-bold text-dark text-truncate" title="${book.title || book.book_title}">${book.title || book.book_title}</h5>
+                                        <p class="text-primary small mb-0">${book.author || '-'}</p>
+                                        
+                                        <div class="info-grid">
+                                            <div><div class="info-label">สำนักพิมพ์</div><div class="info-value text-truncate">${book.publisher || '-'}</div></div>
+                                            <div><div class="info-label">ปีพิมพ์</div><div class="info-value">${book.publish_year || '-'}</div></div>
+                                            <div style="grid-column: span 2;"><div class="info-label">ISBN</div><div class="info-value">${book.isbn || '-'}</div></div>
+                                        </div>
+                                        
+                                        <button class="btn btn-primary w-100 mt-4 fw-bold" onclick="selectBook('${bookJson}')">
+                                            <i class="bi bi-plus-circle me-1"></i> เลือกเล่มนี้
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>`;
+                    }
+                });
+
+                // ถ้าระบบมาจาก Cache/Crawler (และไม่เจอในห้องสมุด) ให้เพิ่มกล่อง "กรอกเอง"
+                if (!isLib) {
+                    container.innerHTML += `
+                        <div class="col-md-6 col-lg-4">
+                            <div class="manual-entry-card" onclick="alert('ฟีเจอร์กรอกข้อมูลเองจะมาในเฟสถัดไปครับ')">
+                                <i class="bi bi-file-earmark-text mb-3" style="font-size: 3rem;"></i>
+                                <h6 class="fw-bold">หนังสือที่ต้องการ</h6>
+                                <p class="small text-primary">กรอกข้อมูลหนังสือด้วยตนเอง <i class="bi bi-arrow-right"></i></p>
+                            </div>
+                        </div>`;
+                }
+
+            } else {
+                header.innerHTML = `
+                    <div class="text-center py-5">
+                        <i class="bi bi-search text-muted" style="font-size: 4rem;"></i>
+                        <h4 class="mt-4 fw-bold">ไม่พบหนังสือที่คุณค้นหาจากทุกแหล่ง</h4>
+                        <button class="btn btn-outline-primary mt-3" onclick="location.reload()">ลองค้นหาด้วยคำอื่น</button>
+                    </div>`;
+            }
+        } catch(e) {
+            loading.classList.add('d-none');
+            header.innerHTML = `<div class="alert alert-danger text-center">เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์</div>`;
+        }
+    });
+
+    function selectBook(bookStr) {
+        localStorage.setItem('selectedBook', decodeURIComponent(bookStr));
+        window.location.href = '/request.html';
+    }
+</script>
+</body>
+</html>

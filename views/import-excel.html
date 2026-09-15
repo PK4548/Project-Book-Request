@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>นำเข้าข้อมูล - University Library</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        :root {
+            --uni-blue: #0a4275; 
+            --uni-light-blue: #f0f4f8;
+            --text-main: #333333;
+            --text-muted: #6c757d;
+            --border-color: #e2e8f0;
+        }
+
+        body { background-color: #f8f9fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: var(--text-main); overflow-x: hidden; }
+        
+        /* Layout & Sidebar (เหมือนหน้า Admin อื่นๆ) */
+        .wrapper { display: flex; width: 100%; min-height: 100vh; }
+        .sidebar { width: 260px; background-color: #ffffff; border-right: 1px solid var(--border-color); flex-shrink: 0; display: flex; flex-direction: column; z-index: 10; }
+        .sidebar-brand { background-color: var(--uni-blue); color: white; padding: 20px 25px; font-weight: 700; font-size: 1.1rem; text-decoration: none; display: flex; align-items: center; gap: 10px; }
+        .sidebar-brand:hover { color: white; }
+        .nav-menu { padding: 20px 0; flex-grow: 1; }
+        .nav-item { margin-bottom: 2px; }
+        .nav-link { color: var(--text-main); font-weight: 500; padding: 12px 25px; display: flex; align-items: center; gap: 12px; border-left: 4px solid transparent; transition: all 0.2s; }
+        .nav-link:hover { background-color: var(--uni-light-blue); color: var(--uni-blue); }
+        .nav-link.active { background-color: var(--uni-light-blue); color: var(--uni-blue); border-left: 4px solid var(--uni-blue); font-weight: 600; }
+        .logout-btn { color: #dc3545; border-top: 1px solid var(--border-color); padding-top: 15px; margin-top: auto; }
+        
+        /* Main Content & Top Nav */
+        .main-content { flex-grow: 1; display: flex; flex-direction: column; }
+        .top-nav { background-color: #ffffff; padding: 15px 30px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+        .nav-title { font-weight: 600; color: var(--text-muted); margin: 0; font-size: 1rem; }
+        .admin-profile { display: flex; align-items: center; gap: 10px; }
+        .admin-avatar { width: 32px; height: 32px; background: var(--uni-light-blue); color: var(--uni-blue); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 1px solid var(--uni-blue); }
+
+        /* Content Body */
+        .content-body { padding: 40px; display: flex; flex-direction: column; align-items: center; }
+        
+        .page-header { width: 100%; max-width: 800px; margin-bottom: 30px; }
+        .page-title { font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+        .page-subtitle { color: var(--text-muted); font-size: 1rem; line-height: 1.6; }
+
+        /* Upload Area (Dropzone) */
+        .upload-container {
+            width: 100%; max-width: 800px; background: #fff; border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid var(--border-color);
+            padding: 40px; text-align: center;
+        }
+
+        .dropzone {
+            border: 2px dashed #cbd5e1; border-radius: 12px; padding: 60px 40px;
+            background-color: #f8fafc; transition: all 0.3s ease; cursor: pointer;
+            position: relative; overflow: hidden;
+        }
+        .dropzone:hover, .dropzone.dragover {
+            border-color: var(--uni-blue); background-color: #f1f5f9;
+        }
+
+        .upload-icon-wrapper {
+            width: 80px; height: 80px; background: var(--uni-blue); color: white;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 2rem; margin: 0 auto 25px; box-shadow: 0 8px 15px rgba(10, 66, 117, 0.2);
+        }
+
+        .upload-title { font-weight: 700; font-size: 1.5rem; color: var(--text-main); margin-bottom: 10px; }
+        .upload-subtitle { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 25px; }
+        .upload-hint { font-size: 0.8rem; color: #94a3b8; margin-top: 20px; }
+
+        /* Custom File Input Button */
+        .btn-browse {
+            background-color: var(--uni-blue); color: white; border: none;
+            padding: 10px 30px; border-radius: 6px; font-weight: 600; font-size: 1rem;
+            transition: 0.2s; display: inline-flex; align-items: center; gap: 8px;
+        }
+        .btn-browse:hover { background-color: #08335e; }
+        
+        /* ซ่อน input file ของจริง */
+        #fileInput { display: none; }
+
+        /* File Preview (เมื่อเลือกไฟล์แล้ว) */
+        #filePreview { display: none; margin-top: 30px; padding: 20px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; text-align: left; }
+        .file-info { display: flex; align-items: center; gap: 15px; }
+        .file-icon { font-size: 2.5rem; color: #10b981; }
+        .file-name { font-weight: 600; color: var(--text-main); font-size: 1.1rem; margin-bottom: 2px; }
+        .file-size { color: var(--text-muted); font-size: 0.85rem; }
+        .btn-remove-file { color: #dc3545; background: none; border: none; font-size: 0.9rem; font-weight: 500; cursor: pointer; padding: 0; margin-top: 10px; }
+        .btn-remove-file:hover { text-decoration: underline; }
+
+        /* Import Button (ด้านล่าง) */
+        .btn-import {
+            background-color: #d8966b; /* สีน้ำตาลอมส้มตาม Prototype */
+            color: white; border: none; padding: 15px 40px; border-radius: 8px;
+            font-weight: 700; font-size: 1.1rem; margin-top: 30px; width: 100%; max-width: 400px;
+            transition: 0.2s; box-shadow: 0 4px 10px rgba(216, 150, 107, 0.3);
+        }
+        .btn-import:hover { background-color: #c48054; transform: translateY(-2px); }
+        .btn-import:disabled { background-color: #e2e8f0; color: #94a3b8; box-shadow: none; cursor: not-allowed; transform: none; }
+
+        /* Progress Bar (จำลองตอนอัปโหลด) */
+        #uploadProgress { display: none; margin-top: 20px; }
+        .progress { height: 10px; border-radius: 5px; background-color: #e2e8f0; }
+        .progress-bar { background-color: #10b981; }
+        .progress-text { font-size: 0.85rem; color: var(--text-muted); text-align: center; margin-top: 10px; font-weight: 500; }
+    </style>
+</head>
+<body>
+
+<div class="wrapper">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <a href="/admin-dashboard.html" class="sidebar-brand">
+            <i class="bi bi-bank fs-4"></i>
+            <div>
+                <div style="line-height: 1.2;">Library Admin</div>
+                <div style="font-size: 0.7rem; font-weight: normal; opacity: 0.8;">Book Request System</div>
+            </div>
+        </a>
+        <div class="nav-menu flex-column">
+            <div class="nav-item"><a href="/admin-dashboard.html" class="nav-link"><i class="bi bi-grid-1x2"></i> หน้าหลัก (Dashboard)</a></div>
+            <div class="nav-item"><a href="/request-management.html" class="nav-link"><i class="bi bi-inboxes"></i> จัดการคำร้อง</a></div>
+            <div class="nav-item"><a href="/import-excel.html" class="nav-link active"><i class="bi bi-file-earmark-spreadsheet"></i> นำเข้าฐานข้อมูล (Excel)</a></div>
+        </div>
+        <div class="nav-item mb-3"><a href="#" class="nav-link logout-btn" onclick="logout()"><i class="bi bi-box-arrow-right"></i> ออกจากระบบ</a></div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="top-nav">
+            <h2 class="nav-title">ระบบบริหารจัดการคำร้องเสนอหนังสือ</h2>
+            <div class="admin-profile">
+                <div class="text-end me-2">
+                    <div class="text-dark fw-bold small" id="adminNameDisplay" style="line-height: 1;">Administrator</div>
+                    <div class="text-muted" style="font-size: 0.7rem;">บรรณารักษ์</div>
+                </div>
+                <div class="admin-avatar"><i class="bi bi-person"></i></div>
+            </div>
+        </div>
+
+        <div class="content-body">
+            
+            <div class="page-header">
+                <h2 class="page-title"><i class="bi bi-file-earmark-arrow-up text-primary fs-3"></i> Import ข้อมูลหนังสือห้องสมุด</h2>
+                <p class="page-subtitle">อัปเดตฐานข้อมูลหนังสือและทรัพยากรห้องสมุดผ่านไฟล์ Excel (.xlsx, .xls) ระบบจะทำการตรวจสอบและนำเข้าข้อมูลโดยอัตโนมัติ</p>
+            </div>
+
+            <div class="upload-container">
+                
+                <!-- Dropzone Area -->
+                <div class="dropzone" id="dropzoneArea" onclick="document.getElementById('fileInput').click()">
+                    <div class="upload-icon-wrapper">
+                        <i class="bi bi-folder-symlink"></i>
+                    </div>
+                    <h3 class="upload-title">ลากและวางไฟล์ที่นี่</h3>
+                    <p class="upload-subtitle">หรือคลิกเพื่อเรียกดูไฟล์จากอุปกรณ์ของคุณ</p>
+                    
+                    <button type="button" class="btn-browse" onclick="event.stopPropagation(); document.getElementById('fileInput').click();">
+                        <i class="bi bi-paperclip"></i> เลือกไฟล์ Excel
+                    </button>
+                    
+                    <p class="upload-hint">รองรับไฟล์ .xlsx, .xls ขนาดไม่เกิน 50MB</p>
+                    
+                    <!-- Input File (ถูกซ่อนไว้) -->
+                    <input type="file" id="fileInput" accept=".xlsx, .xls">
+                </div>
+
+                <!-- File Preview Area -->
+                <div id="filePreview">
+                    <div class="file-info">
+                        <i class="bi bi-file-earmark-excel-fill file-icon"></i>
+                        <div class="flex-grow-1">
+                            <div class="file-name" id="displayFileName">library_books.xlsx</div>
+                            <div class="file-size" id="displayFileSize">2.4 MB</div>
+                            <button class="btn-remove-file" onclick="removeFile()"><i class="bi bi-trash3 me-1"></i> นำไฟล์ออก</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Progress Bar (จำลองการอัปโหลด) -->
+                    <div id="uploadProgress">
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" id="progressBar" style="width: 0%"></div>
+                        </div>
+                        <div class="progress-text" id="progressText">กำลังประมวลผลข้อมูล... 0%</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <button class="btn-import" id="btnImport" disabled onclick="simulateImport()">
+                <i class="bi bi-cloud-arrow-up me-2"></i> Import ข้อมูล
+            </button>
+
+        </div>
+    </div>
+</div>
+
+<script src="/js/app.js"></script>
+<script>
+    checkAuth('ADMIN');
+    const user = getUser();
+    if(user) document.getElementById('adminNameDisplay').innerText = user.full_name || 'Administrator';
+
+    const fileInput = document.getElementById('fileInput');
+    const dropzoneArea = document.getElementById('dropzoneArea');
+    const filePreview = document.getElementById('filePreview');
+    const btnImport = document.getElementById('btnImport');
+    let selectedFile = null;
+
+    // จัดการ Drag & Drop
+    dropzoneArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropzoneArea.classList.add('dragover');
+    });
+
+    dropzoneArea.addEventListener('dragleave', () => {
+        dropzoneArea.classList.remove('dragover');
+    });
+
+    dropzoneArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropzoneArea.classList.remove('dragover');
+        
+        if (e.dataTransfer.files.length > 0) {
+            handleFileSelect(e.dataTransfer.files[0]);
+        }
+    });
+
+    // จัดการเมื่อเลือกไฟล์ผ่านปุ่ม
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+            handleFileSelect(e.target.files[0]);
+        }
+    });
+
+    // ฟังก์ชันจัดการไฟล์ที่เลือก
+    function handleFileSelect(file) {
+        // ตรวจสอบประเภทไฟล์อย่างง่าย (เช็คสกุลไฟล์)
+        const validExtensions = ['xlsx', 'xls'];
+        const fileExtension = file.name.split('.').pop().toLowerCase();
+        
+        if (!validExtensions.includes(fileExtension)) {
+            Swal.fire({ icon: 'error', title: 'ไฟล์ไม่รองรับ', text: 'กรุณาอัปโหลดไฟล์ Excel (.xlsx หรือ .xls) เท่านั้น' });
+            return;
+        }
+
+        selectedFile = file;
+        
+        // แสดงชื่อและขนาดไฟล์
+        document.getElementById('displayFileName').innerText = file.name;
+        document.getElementById('displayFileSize').innerText = (file.size / (1024 * 1024)).toFixed(2) + ' MB';
+        
+        // สลับ UI
+        dropzoneArea.style.display = 'none';
+        filePreview.style.display = 'block';
+        btnImport.disabled = false;
+        
+        // รีเซ็ต Progress Bar
+        document.getElementById('uploadProgress').style.display = 'none';
+        document.getElementById('progressBar').style.width = '0%';
+    }
+
+    // ฟังก์ชันยกเลิกไฟล์
+    function removeFile() {
+        selectedFile = null;
+        fileInput.value = '';
+        dropzoneArea.style.display = 'block';
+        filePreview.style.display = 'none';
+        btnImport.disabled = true;
+    }
+
+    // ฟังก์ชันจำลองการ Import (สำหรับ Demo ให้อาจารย์ดู)
+    function simulateImport() {
+        btnImport.disabled = true;
+        document.getElementById('uploadProgress').style.display = 'block';
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += Math.floor(Math.random() * 15) + 5; // สุ่มเพิ่มทีละ 5-20%
+            if (progress >= 100) progress = 100;
+            
+            progressBar.style.width = progress + '%';
+            progressText.innerText = `กำลังประมวลผลข้อมูล... ${progress}%`;
+            
+            if (progress === 100) {
+                clearInterval(interval);
+                setTimeout(() => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Import สำเร็จ!',
+                        text: 'ระบบได้นำเข้าข้อมูลหนังสือจำนวน 1,452 รายการ เรียบร้อยแล้ว',
+                        confirmButtonColor: '#0a4275'
+                    }).then(() => {
+                        removeFile(); // รีเซ็ตหน้าจอ
+                    });
+                }, 500);
+            }
+        }, 400); // อัปเดตทุกๆ 400ms
+    }
+</script>
+</body>
+</html>
