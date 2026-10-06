@@ -55,13 +55,16 @@ exports.getRequestById = async (requestId) => {
 
 // 3. อัปเดตสถานะและเพิ่ม Admin Note
 exports.updateRequestStatus = async (requestId, status, adminNote) => {
+    // เพิ่ม admin_note เข้าไปในคำสั่งอัปเดต
     const sql = `
         UPDATE book_request 
-        SET status = ?, admin_note = ? 
+        SET status = ?, admin_note = ?, updated_at = NOW() 
         WHERE request_id = ?
     `;
-    const [result] = await db.query(sql, [status, adminNote || null, requestId]);
-    return result.affectedRows;
+    
+    // adminNote ถ้าไม่มีค่า (กรณีอนุมัติ) ให้เป็น null
+    const [result] = await db.execute(sql, [status, adminNote || null, requestId]);
+    return result;
 };
 
 // 4. สถิติสำหรับ Dashboard

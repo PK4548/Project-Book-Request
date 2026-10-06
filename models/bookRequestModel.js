@@ -38,3 +38,16 @@ exports.getMyRequests = async (userId) => {
     const [rows] = await db.query(sql, [userId]);
     return rows;
 };
+
+// ดึงประวัติคำร้องล่าสุดของหนังสือเล่มนี้
+exports.checkBookHistory = async (cacheId) => {
+    const sql = `
+        SELECT status, admin_note 
+        FROM book_request 
+        WHERE cache_id = ? 
+        ORDER BY request_date DESC 
+        LIMIT 1
+    `;
+    const [rows] = await db.query(sql, [cacheId]);
+    return rows.length > 0 ? rows[0] : null;
+};

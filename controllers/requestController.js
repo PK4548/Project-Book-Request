@@ -58,3 +58,16 @@ exports.getMyRequests = async (req, res) => {
         });
     }
 };
+
+exports.checkHistory = async (req, res) => {
+    try {
+        const cacheId = req.params.cacheId;
+        // เรียกใช้ฟังก์ชันจาก Model ที่เราเพิ่งสร้าง
+        const history = await bookRequestModel.checkBookHistory(cacheId); 
+
+        res.status(200).json({ status: 'success', data: history });
+    } catch (error) {
+        console.error('Check history error:', error);
+        res.status(500).json({ status: 'error', message: 'Internal server error' });
+    }
+};

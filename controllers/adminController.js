@@ -7,7 +7,7 @@ exports.getAllRequests = async (req, res) => {
     try {
         const { status } = req.query; // รับค่า filter จาก URL (เช่น ?status=pending)
         const requests = await adminModel.getAllRequests(status);
-        
+
         res.status(200).json({
             status: 'success',
             data: requests
@@ -22,7 +22,7 @@ exports.getRequestById = async (req, res) => {
     try {
         const { id } = req.params;
         const requestDetail = await adminModel.getRequestById(id);
-        
+
         if (!requestDetail) {
             return res.status(404).json({ status: 'error', message: 'Request not found' });
         }
@@ -41,7 +41,7 @@ exports.updateRequestStatus = async (req, res) => {
     try {
         const requestId = req.params.id;
         // รับค่า status และ admin_note จากที่หน้าบ้านส่งมา
-        const { status, admin_note } = req.body; 
+        const { status, admin_note } = req.body;
 
         // ส่งข้อมูลไปให้ Model จัดการต่อ
         // (สมมติว่าคุณเบทเรียกใช้ adminModel อยู่ด้านบนของไฟล์แล้ว)

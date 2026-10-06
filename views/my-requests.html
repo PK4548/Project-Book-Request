@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,222 +8,391 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <style>
-        body { background-color: #f4f6f9; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        
+        body {
+            background-color: #f4f6f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
         /* Navbar */
-        .navbar { background-color: #ffffff; box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
-        .nav-link { color: #6c757d; font-weight: 600; padding: 10px 15px !important; transition: all 0.2s; }
-        .nav-link:hover { color: #0d6efd; }
-        .nav-link.active { color: #0d6efd !important; font-weight: 700; border-bottom: 2px solid #0d6efd; }
+        .navbar {
+            background-color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+        }
+
+        .nav-link {
+            color: #6c757d;
+            font-weight: 600;
+            padding: 10px 15px !important;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover {
+            color: #0d6efd;
+        }
+
+        .nav-link.active {
+            color: #0d6efd !important;
+            font-weight: 700;
+            border-bottom: 2px solid #0d6efd;
+        }
 
         /* Header Card (Gradient Background) */
         .header-card {
             background: linear-gradient(135deg, #e0e8f5 0%, #ffffff 100%);
             border-radius: 20px;
             border: none;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.02);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.02);
             padding: 30px;
             position: relative;
             overflow: hidden;
         }
 
         /* Stat Boxes */
-        .stat-box { background: #fff; border-radius: 12px; padding: 15px 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.04); text-align: center; border: 1px solid #f1f3f5; min-width: 120px; }
-        .stat-label { font-size: 0.75rem; font-weight: 700; color: #858796; text-transform: uppercase; margin-bottom: 5px; }
-        .stat-value { font-size: 1.8rem; font-weight: 800; line-height: 1; }
+        .stat-box {
+            background: #fff;
+            border-radius: 12px;
+            padding: 15px 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+            text-align: center;
+            border: 1px solid #f1f3f5;
+            min-width: 120px;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #858796;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            line-height: 1;
+        }
 
         /* Filter Tabs */
-        .filter-btn { border: none; background: transparent; padding: 8px 20px; border-radius: 20px; font-weight: 600; color: #6c757d; transition: all 0.3s; font-size: 0.9rem; }
-        .filter-btn:hover { background: #e9ecef; }
-        .filter-btn.active { background: #0d6efd; color: white; box-shadow: 0 4px 10px rgba(13, 110, 253, 0.3); }
+        .filter-btn {
+            border: none;
+            background: transparent;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            color: #6c757d;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .filter-btn:hover {
+            background: #e9ecef;
+        }
+
+        .filter-btn.active {
+            background: #0d6efd;
+            color: white;
+            box-shadow: 0 4px 10px rgba(13, 110, 253, 0.3);
+        }
 
         /* Main Data Card */
-        .data-card { background: #fff; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); border: none; overflow: hidden; margin-top: -20px; position: relative; z-index: 2; }
-        
+        .data-card {
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+            border: none;
+            overflow: hidden;
+            margin-top: -20px;
+            position: relative;
+            z-index: 2;
+        }
+
         /* Table Styles */
-        .table { margin-bottom: 0; }
-        .table thead th { background: transparent; border-bottom: 2px solid #f8f9fa; color: #a1a5b7; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; padding: 20px; letter-spacing: 0.5px; }
-        .table tbody td { padding: 20px; vertical-align: middle; border-bottom: 1px dashed #f1f3f5; transition: all 0.2s; }
-        .table tbody tr:hover td { background-color: #f8f9fc; }
+        .table {
+            margin-bottom: 0;
+        }
+
+        .table thead th {
+            background: transparent;
+            border-bottom: 2px solid #f8f9fa;
+            color: #a1a5b7;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        .table tbody td {
+            padding: 20px;
+            vertical-align: middle;
+            border-bottom: 1px dashed #f1f3f5;
+            transition: all 0.2s;
+        }
+
+        .table tbody tr:hover td {
+            background-color: #f8f9fc;
+        }
 
         /* Book Item in Table */
-        .book-icon-wrapper { width: 45px; height: 60px; background: #f1f3f5; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: #adb5bd; margin-right: 15px; }
-        .req-id { color: #6c757d; font-family: monospace; font-size: 0.9rem; font-weight: 600; }
-        
+        .book-icon-wrapper {
+            width: 45px;
+            height: 60px;
+            background: #f1f3f5;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #adb5bd;
+            margin-right: 15px;
+        }
+
+        .req-id {
+            color: #6c757d;
+            font-family: monospace;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
         /* Status Badges */
-        .status-badge { padding: 6px 15px; border-radius: 20px; font-weight: 700; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 5px; }
-        .status-pending { background: #fff3cd; color: #f59f00; border: 1px solid #ffeeba; }
-        .status-approved { background: #d4edda; color: #28a745; border: 1px solid #c3e6cb; }
-        .status-rejected { background: #f8d7da; color: #dc3545; border: 1px solid #f5c6cb; }
+        .status-badge {
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #f59f00;
+            border: 1px solid #ffeeba;
+        }
+
+        .status-approved {
+            background: #d4edda;
+            color: #28a745;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-rejected {
+            background: #f8d7da;
+            color: #dc3545;
+            border: 1px solid #f5c6cb;
+        }
 
         /* Search Box in Filter */
-        .search-box { background: #f4f6f8; border-radius: 12px; padding: 10px 15px; display: flex; align-items: center; width: 100%; max-width: 300px; border: 1px solid transparent; transition: all 0.2s; }
-        .search-box:focus-within { border-color: #0d6efd; background: #fff; box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1); }
-        .search-box input { border: none; background: transparent; outline: none; width: 100%; font-size: 0.9rem; margin-left: 10px; }
+        .search-box {
+            background: #f4f6f8;
+            border-radius: 12px;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            max-width: 300px;
+            border: 1px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .search-box:focus-within {
+            border-color: #0d6efd;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
+        }
+
+        .search-box input {
+            border: none;
+            background: transparent;
+            outline: none;
+            width: 100%;
+            font-size: 0.9rem;
+            margin-left: 10px;
+        }
 
         /* Animations */
-        @keyframes fadeInRow { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-row { animation: fadeInRow 0.3s ease forwards; }
+        @keyframes fadeInRow {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
 
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-row {
+            animation: fadeInRow 0.3s ease forwards;
+        }
     </style>
 </head>
+
 <body>
 
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg sticky-top mb-4">
-    <div class="container">
-        <a class="navbar-brand text-primary fw-bold" href="/search.html"><i class="bi bi-book-half me-2"></i>Book Request System</a>
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav mx-auto">
-                <li class="nav-item"><a class="nav-link" href="/search.html">ค้นหาหนังสือ</a></li>
-                <li class="nav-item"><a class="nav-link active" href="/my-requests.html">คำร้องของฉัน</a></li>
-            </ul>
-            <div class="d-flex align-items-center gap-3">
-                <span class="text-secondary fw-semibold" id="userNameDisplay"></span>
-                <button class="btn btn-outline-danger btn-sm rounded-pill px-4 fw-bold" onclick="logout()">Logout</button>
-            </div>
-        </div>
-    </div>
-</nav>
-
-<div class="container pb-5">
-    
-    <!-- Header Section (ตาม Prototype) -->
-    <div class="header-card mb-4">
-        <div class="row align-items-center">
-            <div class="col-md-7 mb-4 mb-md-0">
-                <h2 class="fw-bold text-dark d-flex align-items-center mb-2">
-                    <i class="bi bi-clipboard2-data fs-1 text-primary me-3 opacity-75"></i> คำร้องของฉัน
-                </h2>
-                <p class="text-muted mb-0">ติดตามสถานะการขอหนังสือของคุณ จัดการและตรวจสอบประวัติการทำรายการได้ที่นี่</p>
-            </div>
-            <div class="col-md-5 d-flex justify-content-md-end gap-3">
-                <div class="stat-box">
-                    <div class="stat-label">คำร้องทั้งหมด</div>
-                    <div class="stat-value text-primary" id="statTotal">0</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-label">รอตรวจสอบ</div>
-                    <div class="stat-value text-warning" id="statPending">0</div>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg sticky-top mb-4">
+        <div class="container">
+            <a class="navbar-brand text-primary fw-bold" href="/search.html"><i class="bi bi-book-half me-2"></i>Book
+                Request System</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item"><a class="nav-link" href="/search.html">ค้นหาหนังสือ</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/my-requests.html">คำร้องของฉัน</a></li>
+                </ul>
+                <div class="d-flex align-items-center gap-3">
+                    <span class="text-secondary fw-semibold" id="userNameDisplay"></span>
+                    <button class="btn btn-outline-danger btn-sm rounded-pill px-4 fw-bold"
+                        onclick="logout()">Logout</button>
                 </div>
             </div>
         </div>
+    </nav>
+
+    <div class="container pb-5">
+
+        <!-- Header Section (ตาม Prototype) -->
+        <div class="header-card mb-4">
+            <div class="row align-items-center">
+                <div class="col-md-7 mb-4 mb-md-0">
+                    <h2 class="fw-bold text-dark d-flex align-items-center mb-2">
+                        <i class="bi bi-clipboard2-data fs-1 text-primary me-3 opacity-75"></i> คำร้องของฉัน
+                    </h2>
+                    <p class="text-muted mb-0">ติดตามสถานะการขอหนังสือของคุณ จัดการและตรวจสอบประวัติการทำรายการได้ที่นี่
+                    </p>
+                </div>
+                <div class="col-md-5 d-flex justify-content-md-end gap-3">
+                    <div class="stat-box">
+                        <div class="stat-label">คำร้องทั้งหมด</div>
+                        <div class="stat-value text-primary" id="statTotal">0</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">รอตรวจสอบ</div>
+                        <div class="stat-value text-warning" id="statPending">0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Table Section -->
+        <div class="data-card">
+
+            <!-- Filter & Search Bar -->
+            <div class="d-flex flex-wrap justify-content-between align-items-center p-4 border-bottom">
+                <div class="d-flex gap-2 mb-3 mb-md-0" id="filterContainer">
+                    <button class="filter-btn active" data-filter="all">ทั้งหมด</button>
+                    <button class="filter-btn" data-filter="pending">รอตรวจสอบ</button>
+                    <button class="filter-btn" data-filter="approved">อนุมัติแล้ว</button>
+                    <button class="filter-btn" data-filter="rejected">ปฏิเสธ</button>
+                </div>
+
+                <div class="search-box">
+                    <i class="bi bi-search text-muted"></i>
+                    <input type="text" id="searchInput" placeholder="ค้นหาชื่อหนังสือ...">
+                </div>
+            </div>
+
+            <!-- The Table -->
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="ps-4" style="width: 15%;">REQUEST ID</th>
+                            <th style="width: 45%;">หนังสือ (BOOK)</th>
+                            <th style="width: 20%;">วันที่ (DATE)</th>
+                            <th style="width: 20%;">สถานะ (STATUS)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reqTable">
+                        <tr>
+                            <td colspan="4" class="text-center py-5">
+                                <div class="spinner-border text-primary"></div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- State for No Data -->
+            <div id="noDataState" class="text-center py-5 d-none">
+                <i class="bi bi-inbox text-muted opacity-25" style="font-size: 5rem;"></i>
+                <h5 class="mt-3 fw-bold text-secondary">ไม่พบข้อมูลคำร้อง</h5>
+                <p class="text-muted small">ไม่พบรายการที่ตรงกับเงื่อนไขที่คุณเลือก</p>
+            </div>
+
+        </div>
     </div>
 
-    <!-- Data Table Section -->
-    <div class="data-card">
-        
-        <!-- Filter & Search Bar -->
-        <div class="d-flex flex-wrap justify-content-between align-items-center p-4 border-bottom">
-            <div class="d-flex gap-2 mb-3 mb-md-0" id="filterContainer">
-                <button class="filter-btn active" data-filter="all">ทั้งหมด</button>
-                <button class="filter-btn" data-filter="pending">รอตรวจสอบ</button>
-                <button class="filter-btn" data-filter="approved">อนุมัติแล้ว</button>
-                <button class="filter-btn" data-filter="rejected">ปฏิเสธ</button>
-            </div>
-            
-            <div class="search-box">
-                <i class="bi bi-search text-muted"></i>
-                <input type="text" id="searchInput" placeholder="ค้นหาชื่อหนังสือ...">
-            </div>
-        </div>
+    <script src="/js/app.js"></script>
+    <script>
+        checkAuth('USER');
+        const user = getUser();
+        if (user) document.getElementById('userNameDisplay').innerHTML = `<i class="bi bi-person-circle me-1"></i> ${user.full_name}`;
 
-        <!-- The Table -->
-        <div class="table-responsive">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th class="ps-4" style="width: 15%;">REQUEST ID</th>
-                        <th style="width: 45%;">หนังสือ (BOOK)</th>
-                        <th style="width: 20%;">วันที่ (DATE)</th>
-                        <th style="width: 20%;">สถานะ (STATUS)</th>
-                    </tr>
-                </thead>
-                <tbody id="reqTable">
-                    <tr><td colspan="4" class="text-center py-5"><div class="spinner-border text-primary"></div></td></tr>
-                </tbody>
-            </table>
-        </div>
-        
-        <!-- State for No Data -->
-        <div id="noDataState" class="text-center py-5 d-none">
-            <i class="bi bi-inbox text-muted opacity-25" style="font-size: 5rem;"></i>
-            <h5 class="mt-3 fw-bold text-secondary">ไม่พบข้อมูลคำร้อง</h5>
-            <p class="text-muted small">ไม่พบรายการที่ตรงกับเงื่อนไขที่คุณเลือก</p>
-        </div>
+        // ตัวแปรเก็บข้อมูลทั้งหมดเพื่อใช้ทำ Filter
+        let allRequests = [];
 
-    </div>
-</div>
+        async function loadData() {
+            try {
+                const res = await fetch('/api/requests/my', { headers: { 'Authorization': `Bearer ${getToken()}` } });
+                const result = await res.json();
 
-<script src="/js/app.js"></script>
-<script>
-    checkAuth('USER');
-    const user = getUser();
-    if(user) document.getElementById('userNameDisplay').innerHTML = `<i class="bi bi-person-circle me-1"></i> ${user.full_name}`;
+                if (res.ok && result.data) {
+                    allRequests = result.data; // เก็บลงตัวแปร
 
-    // ตัวแปรเก็บข้อมูลทั้งหมดเพื่อใช้ทำ Filter
-    let allRequests = [];
+                    // คำนวณตัวเลขสถิติ
+                    document.getElementById('statTotal').innerText = allRequests.length;
+                    document.getElementById('statPending').innerText = allRequests.filter(r => r.status === 'pending').length;
 
-    async function loadData() {
-        try {
-            const res = await fetch('/api/requests/my', { headers: { 'Authorization': `Bearer ${getToken()}` } });
-            const result = await res.json();
-            
-            if (res.ok && result.data) {
-                allRequests = result.data; // เก็บลงตัวแปร
-                
-                // คำนวณตัวเลขสถิติ
-                document.getElementById('statTotal').innerText = allRequests.length;
-                document.getElementById('statPending').innerText = allRequests.filter(r => r.status === 'pending').length;
-                
-                // แสดงผลตารางทั้งหมด
+                    // แสดงผลตารางทั้งหมด
+                    renderTable(allRequests);
+                } else {
+                    throw new Error("Failed to load");
+                }
+            } catch (e) {
+                console.log("ใช้งานข้อมูลจำลอง (Mock Data) สำหรับการ Demo");
+                // ข้อมูลจำลองสำหรับ Demo (ถ้า API ยังทำไม่เสร็จ)
+                allRequests = [
+                    { request_id: 1, book_title: 'Python เบื้องต้น', author: 'สมชาย ใจดี', request_date: '2026-08-18T10:00:00Z', status: 'pending' },
+                    { request_id: 2, book_title: 'AI Fundamentals', author: 'Alan Turing', request_date: '2026-08-17T14:30:00Z', status: 'approved' },
+                    { request_id: 3, book_title: 'Cloud Architecture', author: 'AWS Press', request_date: '2026-08-16T09:15:00Z', status: 'pending' }
+                ];
+                document.getElementById('statTotal').innerText = '3';
+                document.getElementById('statPending').innerText = '2';
                 renderTable(allRequests);
-            } else {
-                throw new Error("Failed to load");
             }
-        } catch(e) {
-            console.log("ใช้งานข้อมูลจำลอง (Mock Data) สำหรับการ Demo");
-            // ข้อมูลจำลองสำหรับ Demo (ถ้า API ยังทำไม่เสร็จ)
-            allRequests = [
-                { request_id: 1, book_title: 'Python เบื้องต้น', author: 'สมชาย ใจดี', request_date: '2026-08-18T10:00:00Z', status: 'pending' },
-                { request_id: 2, book_title: 'AI Fundamentals', author: 'Alan Turing', request_date: '2026-08-17T14:30:00Z', status: 'approved' },
-                { request_id: 3, book_title: 'Cloud Architecture', author: 'AWS Press', request_date: '2026-08-16T09:15:00Z', status: 'pending' }
-            ];
-            document.getElementById('statTotal').innerText = '3';
-            document.getElementById('statPending').innerText = '2';
-            renderTable(allRequests);
         }
-    }
 
-    function renderTable(data) {
-        const tbody = document.getElementById('reqTable');
-        const noData = document.getElementById('noDataState');
-        tbody.innerHTML = '';
-        
-        if (data.length === 0) {
-            noData.classList.remove('d-none');
-        } else {
-            noData.classList.add('d-none');
-            
-            data.forEach((req, index) => {
-                // สร้างรูปแบบ ID ให้สวยๆ 
-                const displayId = `BR-${String(req.request_id).padStart(5, '0')}`;
-                
-                // จัดการรูปแบบวันที่
-                const dateObj = new Date(req.request_date);
-                const dateStr = `${dateObj.getDate()}/${dateObj.getMonth()+1}/${dateObj.getFullYear()}`;
-                
-                // จัดการ Badge สถานะ
-                let statusBadge = '';
-                if(req.status === 'pending') statusBadge = '<span class="status-badge status-pending"><i class="bi bi-clock-history"></i> รอตรวจสอบ</span>';
-                else if(req.status === 'approved') statusBadge = '<span class="status-badge status-approved"><i class="bi bi-check-circle-fill"></i> อนุมัติแล้ว</span>';
-                else if(req.status === 'rejected') statusBadge = '<span class="status-badge status-rejected"><i class="bi bi-x-circle-fill"></i> ปฏิเสธ</span>';
-                else statusBadge = `<span class="badge bg-secondary">${req.status}</span>`;
+        function renderTable(data) {
+            const tbody = document.getElementById('reqTable');
+            const noData = document.getElementById('noDataState');
+            tbody.innerHTML = '';
 
-                // หน่วงเวลา Animation ให้ไล่ระดับ
-                const animDelay = index * 0.05;
+            if (data.length === 0) {
+                noData.classList.remove('d-none');
+            } else {
+                noData.classList.add('d-none');
 
-                tbody.innerHTML += `
+                data.forEach((req, index) => {
+                    // สร้างรูปแบบ ID ให้สวยๆ 
+                    const displayId = `BR-${String(req.request_id).padStart(5, '0')}`;
+
+                    // จัดการรูปแบบวันที่
+                    const dateObj = new Date(req.request_date);
+                    const dateStr = `${dateObj.getDate()}/${dateObj.getMonth() + 1}/${dateObj.getFullYear()}`;
+
+                    // จัดการ Badge สถานะ
+                    let statusBadge = '';
+                    if (req.status === 'pending') statusBadge = '<span class="status-badge status-pending"><i class="bi bi-clock-history"></i> รอตรวจสอบ</span>';
+                    else if (req.status === 'approved') statusBadge = '<span class="status-badge status-approved"><i class="bi bi-check-circle-fill"></i> อนุมัติแล้ว</span>';
+                    else if (req.status === 'rejected') statusBadge = '<span class="status-badge status-rejected"><i class="bi bi-x-circle-fill"></i> ปฏิเสธ</span>';
+                    else statusBadge = `<span class="badge bg-secondary">${req.status}</span>`;
+
+                    // หน่วงเวลา Animation ให้ไล่ระดับ
+                    const animDelay = index * 0.05;
+
+                    tbody.innerHTML += `
                     <tr class="animate-row" style="animation-delay: ${animDelay}s;">
                         <td class="ps-4 req-id">${displayId}</td>
                         <td>
@@ -231,60 +401,66 @@
                                 <div>
                                     <div class="fw-bold text-dark fs-6">${req.book_title || req.title}</div>
                                     <div class="text-muted small">${req.author || 'ไม่ระบุผู้แต่ง'}</div>
+                                    ${req.status === 'rejected' && req.admin_note ? `
+                                        <div class="text-danger small mt-1">
+                                            <i class="bi bi-info-circle-fill"></i> <b>เหตุผลที่ไม่อนุมัติ:</b> ${req.admin_note}
+                                        </div>
+                                    ` : ''}
                                 </div>
                             </div>
                         </td>
                         <td class="text-muted fw-semibold">${dateStr}</td>
                         <td>${statusBadge}</td>
                     </tr>`;
+                });
+            }
+        }
+
+        // ================= ระบบลูกเล่น: กรองข้อมูล (Filter) =================
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                // ลบ Active จากปุ่มเก่า มาใส่ปุ่มใหม่
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+
+                const filterType = e.target.getAttribute('data-filter');
+                const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+
+                applyFilters(filterType, searchTerm);
             });
-        }
-    }
-
-    // ================= ระบบลูกเล่น: กรองข้อมูล (Filter) =================
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            // ลบ Active จากปุ่มเก่า มาใส่ปุ่มใหม่
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            e.target.classList.add('active');
-            
-            const filterType = e.target.getAttribute('data-filter');
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            
-            applyFilters(filterType, searchTerm);
         });
-    });
 
-    // ================= ระบบลูกเล่น: ค้นหาในตาราง =================
-    document.getElementById('searchInput').addEventListener('input', (e) => {
-        const searchTerm = e.target.value.toLowerCase();
-        const activeFilter = document.querySelector('.filter-btn.active').getAttribute('data-filter');
-        
-        applyFilters(activeFilter, searchTerm);
-    });
+        // ================= ระบบลูกเล่น: ค้นหาในตาราง =================
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const activeFilter = document.querySelector('.filter-btn.active').getAttribute('data-filter');
 
-    // ฟังก์ชันรวมการกรองข้อมูล
-    function applyFilters(statusFilter, searchTerm) {
-        let filteredData = allRequests;
-        
-        // 1. กรองตามสถานะ
-        if (statusFilter !== 'all') {
-            filteredData = filteredData.filter(r => r.status === statusFilter);
+            applyFilters(activeFilter, searchTerm);
+        });
+
+        // ฟังก์ชันรวมการกรองข้อมูล
+        function applyFilters(statusFilter, searchTerm) {
+            let filteredData = allRequests;
+
+            // 1. กรองตามสถานะ
+            if (statusFilter !== 'all') {
+                filteredData = filteredData.filter(r => r.status === statusFilter);
+            }
+
+            // 2. กรองตามการพิมพ์ค้นหา
+            if (searchTerm) {
+                filteredData = filteredData.filter(r =>
+                    (r.book_title && r.book_title.toLowerCase().includes(searchTerm)) ||
+                    (r.author && r.author.toLowerCase().includes(searchTerm))
+                );
+            }
+
+            renderTable(filteredData);
         }
-        
-        // 2. กรองตามการพิมพ์ค้นหา
-        if (searchTerm) {
-            filteredData = filteredData.filter(r => 
-                (r.book_title && r.book_title.toLowerCase().includes(searchTerm)) ||
-                (r.author && r.author.toLowerCase().includes(searchTerm))
-            );
-        }
-        
-        renderTable(filteredData);
-    }
 
-    // เริ่มโหลดข้อมูลตอนเปิดหน้า
-    loadData();
-</script>
+        // เริ่มโหลดข้อมูลตอนเปิดหน้า
+        loadData();
+    </script>
 </body>
+
 </html>
