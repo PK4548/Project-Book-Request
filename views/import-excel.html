@@ -532,35 +532,54 @@
             btnImport.disabled = true;
         }
 
-        // ฟังก์ชันจำลองการ Import (สำหรับ Demo ให้อาจารย์ดู)
-        function simulateImport() {
+        // ฟังก์ชันส่งไฟล์ Excel จริงไปยังหลังบ้าน
+        async function simulateImport() {
+            if (!selectedFile) return;
+
             btnImport.disabled = true;
             document.getElementById('uploadProgress').style.display = 'block';
-            const progressBar = document.getElementById('progressBar');
-            const progressText = document.getElementById('progressText');
+            document.getElementById('progressBar').style.width = '50%';
+            document.getElementById('progressText').innerText = 'กำลังอัปโหลดและประมวลผลข้อมูล...';
 
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += Math.floor(Math.random() * 15) + 5; // สุ่มเพิ่มทีละ 5-20%
-                if (progress >= 100) progress = 100;
+            const formData = new FormData();
+            formData.append('file', selectedFile);
 
-                progressBar.style.width = progress + '%';
-                progressText.innerText = `กำลังประมวลผลข้อมูล... ${progress}%`;
+            try {
+                // ดึง Token จาก localStorage มาแนบเพื่อยืนยันสิทธิ์ Admin
+                const token = localStorage.getItem('token');
 
-                if (progress === 100) {
-                    clearInterval(interval);
+                const response = await fetch('/api/admin/library-books/import', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.status === 'success') {
+                    document.getElementById('progressBar').style.width = '100%';
+                    document.getElementById('progressText').innerText = 'ประมวลผลสำเร็จ!';
+                    
                     setTimeout(() => {
                         Swal.fire({
                             icon: 'success',
                             title: 'Import สำเร็จ!',
-                            text: 'ระบบได้นำเข้าข้อมูลหนังสือจำนวน 1,452 รายการ เรียบร้อยแล้ว',
+                            text: result.message,
                             confirmButtonColor: '#0a4275'
                         }).then(() => {
                             removeFile(); // รีเซ็ตหน้าจอ
                         });
                     }, 500);
+                } else {
+                    throw new Error(result.message || 'เกิดข้อผิดพลาดในการนำเข้าข้อมูล');
                 }
-            }, 400); // อัปเดตทุกๆ 400ms
+            } catch (error) {
+                Swal.fire({ icon: 'error', title: 'นำเข้าข้อมูลไม่สำเร็จ', text: error.message });
+                btnImport.disabled = false;
+                document.getElementById('uploadProgress').style.display = 'none';
+            }
         }
     </script>
 </body>
