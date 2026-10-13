@@ -377,7 +377,7 @@
                 const result = await res.json();
 
                 if (res.ok) {
-                    const reqId = result.data?.insertId || Math.floor(Math.random() * 90000) + 10000;
+                    const reqId = result.request_id || result.data?.insertId || 1;
                     document.getElementById('displayReqId').textContent = `BR-${String(reqId).padStart(5, '0')}`;
 
                     document.getElementById('formView').style.display = 'none';

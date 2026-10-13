@@ -479,44 +479,44 @@
 
         // ฟังก์ชันกดยกเลิกคำร้อง
         async function cancelRequest(requestId) {
-    Swal.fire({
-        title: 'ยืนยันการยกเลิกคำร้อง?',
-        text: "คุณต้องการยกเลิกคำร้องซื้อหนังสือนี้ใช่หรือไม่?",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#dc3545',
-        cancelButtonColor: '#6c757d',
-        confirmButtonText: 'ใช่, ยกเลิกคำร้อง',
-        cancelButtonText: 'ปิด'
-    }).then(async (result) => {
-        if (result.isConfirmed) {
-            try {
-                // 📌 ใช้พาร์ทนี้ให้ตรงกับ Route หลังบ้าน (/api/requests/${requestId})
-                const res = await fetch(`http://localhost:3000/api/requests/${requestId}`, {
-                    method: 'DELETE',
-                    headers: { 'Authorization': `Bearer ${getToken()}` }
-                });
+            Swal.fire({
+                title: 'ยืนยันการยกเลิกคำร้อง?',
+                text: "คุณต้องการยกเลิกคำร้องซื้อหนังสือนี้ใช่หรือไม่?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'ใช่, ยกเลิกคำร้อง',
+                cancelButtonText: 'ปิด'
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    try {
+                        // 📌 ใช้พาร์ทนี้ให้ตรงกับ Route หลังบ้าน (/api/requests/${requestId})
+                        const res = await fetch(`http://localhost:3000/api/requests/${requestId}`, {
+                            method: 'DELETE',
+                            headers: { 'Authorization': `Bearer ${getToken()}` }
+                        });
 
-                const resultJson = await res.json();
+                        const resultJson = await res.json();
 
-                if (res.ok && resultJson.status === 'success') {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'ยกเลิกสำเร็จ!',
-                        text: 'รายการคำร้องถูกยกเลิกเรียบร้อยแล้ว',
-                        timer: 1500,
-                        showConfirmButton: false
-                    });
-                    loadData(); // โหลดข้อมูลตารางใหม่ทันที
-                } else {
-                    throw new Error(resultJson.message || 'ไม่สามารถยกเลิกได้');
+                        if (res.ok && resultJson.status === 'success') {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'ยกเลิกสำเร็จ!',
+                                text: 'รายการคำร้องถูกยกเลิกเรียบร้อยแล้ว',
+                                timer: 1500,
+                                showConfirmButton: false
+                            });
+                            loadData(); // โหลดข้อมูลตารางใหม่ทันที
+                        } else {
+                            throw new Error(resultJson.message || 'ไม่สามารถยกเลิกได้');
+                        }
+                    } catch (error) {
+                        Swal.fire('Error', error.message, 'error');
+                    }
                 }
-            } catch (error) {
-                Swal.fire('Error', error.message, 'error');
-            }
+            });
         }
-    });
-}
 
         // เริ่มโหลดข้อมูลตอนเปิดหน้า
         loadData();
