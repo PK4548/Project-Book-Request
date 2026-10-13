@@ -17,8 +17,12 @@ router.post('/library-books/import', upload.single('file'), importController.imp
 // นิยาม API Endpoints
 router.get('/dashboard', adminController.getDashboardStats);
 router.get('/requests', adminController.getAllRequests);
+
+router.get('/requests/export/excel', adminController.exportRequestsExcel);
+
 router.get('/requests/:id', adminController.getRequestById);
 router.put('/requests/:id/status', adminController.updateRequestStatus);
+
 
 router.use((err, req, res, next) => {
     if (err) {

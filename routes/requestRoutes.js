@@ -8,4 +8,7 @@ router.post('/', verifyToken, requestController.createRequest);
 router.get('/my', verifyToken, requestController.getMyRequests);
 router.get('/check-history/:cacheId', requestController.checkHistory);
 
+// เส้นทางสำหรับยกเลิกคำร้องของฉัน
+router.delete('/:id', verifyToken, requestController.cancelMyRequest);
+
 module.exports = router;

@@ -205,7 +205,7 @@
                             <i class="bi bi-search"></i>
                             <input type="text" id="searchInput" placeholder="ค้นหารหัส หรือชื่อหนังสือ...">
                         </div>
-                        <button class="btn-export" onclick="alert('ฟีเจอร์ดาวน์โหลด Excel จะมาในเร็วๆ นี้ครับ')"><i class="bi bi-download"></i> Export</button>
+                        <button class="btn-export" onclick="exportToExcel()"><i class="bi bi-download"></i> Export</button>
                     </div>
                 </div>
 
@@ -500,6 +500,50 @@
             }
         } catch (error) {
             Swal.fire({ icon: 'error', title: 'เชื่อมต่อขัดข้อง', text: 'ไม่สามารถติดต่อเซิร์ฟเวอร์หลังบ้านได้' });
+        }
+    }
+
+    // ฟังก์ชันสำหรับดาวน์โหลดรายงาน Excel จากหลังบ้าน
+    async function exportToExcel() {
+        try {
+            const token = getToken();
+            const response = await fetch('http://localhost:3000/api/admin/requests/export/excel', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('ไม่สามารถดาวน์โหลดไฟล์รายงานได้');
+            }
+
+            // แปลงข้อมูลที่ได้เป็นไฟล์ Blob แล้วสั่งดาวน์โหลดลงเครื่องอัตโนมัติ
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `book_requests_report_${new Date().toISOString().slice(0, 10)}.xlsx`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+
+            Swal.fire({
+                icon: 'success',
+                title: 'ดาวน์โหลดสำเร็จ!',
+                text: 'ไฟล์รายงานคำร้องถูกดาวน์โหลดเรียบร้อยแล้ว',
+                timer: 1500,
+                showConfirmButton: false
+            });
+
+        } catch (error) {
+            console.error('Export Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'เกิดข้อผิดพลาด',
+                text: 'ไม่สามารถเชื่อมต่อเพื่อดาวน์โหลดรายงานได้'
+            });
         }
     }
 
