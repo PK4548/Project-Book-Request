@@ -7,6 +7,7 @@ exports.getAllRequests = async (statusFilter) => {
             br.request_id,
             br.request_date,
             br.status,
+            br.reason,
             u.full_name AS requester_name,
             u.email AS requester_email,
             sc.book_title,

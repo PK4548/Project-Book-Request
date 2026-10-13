@@ -104,7 +104,7 @@ exports.exportRequestsExcel = async (req, res) => {
         sheet.addRow([]);
 
         // 3. กำหนดหัวตาราง (แถวที่ 5)
-        const headerRow = sheet.addRow(['ลำดับ', 'ชื่อหนังสือ', 'ผู้แต่ง', 'ISBN', 'ผู้ขอ', 'สถานะ', 'เหตุผล (Admin Note)', 'วันที่ขอ']);
+        const headerRow = sheet.addRow(['ลำดับ', 'ชื่อหนังสือ', 'ผู้แต่ง', 'ISBN', 'ผู้ขอ', 'สถานะ', 'เหตุผลที่ขอ (User Reason)', 'วันที่ขอ']);
         
         // ตกแต่งหัวตาราง (สีน้ำเงินเข้ม #0A4275, ตัวหนังสือสีขาว ตัวหนา)
         headerRow.eachCell((cell) => {
@@ -126,6 +126,9 @@ exports.exportRequestsExcel = async (req, res) => {
             if (item.status === 'approved') statusText = 'อนุมัติแล้ว';
             else if (item.status === 'rejected') statusText = 'ปฏิเสธ';
 
+            // จัดรูปแบบวันที่ให้เป็นไทย อ่านง่าย
+            const reqDate = item.request_date ? new Date(item.request_date).toLocaleString('th-TH') : '-';
+
             const row = sheet.addRow([
                 index + 1,
                 item.book_title || item.title || '-',
@@ -133,8 +136,8 @@ exports.exportRequestsExcel = async (req, res) => {
                 String(item.isbn || '-'),
                 item.requester_name || item.full_name || 'ไม่ระบุ',
                 statusText,
-                item.admin_note || '-',
-                item.created_at ? new Date(item.created_at).toLocaleString('th-TH') : '-'
+                item.reason || '-', // ดึงเหตุผลที่ User เสนอมาลงช่องนี้
+                reqDate             // ดึงวันเวลาที่ขอจริงจากฐานข้อมูล (request_date)
             ]);
 
             // กำหนดความสูงและเส้นขอบแถวข้อมูล
