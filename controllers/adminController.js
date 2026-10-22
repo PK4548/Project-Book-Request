@@ -62,9 +62,14 @@ exports.updateRequestStatus = async (req, res) => {
 exports.getDashboardStats = async (req, res) => {
     try {
         const stats = await adminModel.getDashboardStats();
+        const topKeywords = await adminModel.getTopKeywords();
+        
         res.status(200).json({
             status: 'success',
-            data: stats
+            data: {
+                ...stats,
+                top_keywords: topKeywords
+            }
         });
     } catch (error) {
         console.error('Get dashboard stats error:', error);

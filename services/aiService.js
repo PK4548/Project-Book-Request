@@ -10,27 +10,35 @@ exports.recommendBooks = async (searchParams) => {
         }
 
         const { keyword, title, author, isbn } = searchParams;
+
+        // คำนวณช่วงปีล่าสุดย้อนหลังไม่เกิน 2 ปี (ทั้ง ค.ศ. และ พ.ศ.)
+        const currentYearAD = new Date().getFullYear();
+        const minYearAD = currentYearAD - 2;
+        const currentYearBE = currentYearAD + 543;
+        const minYearBE = minYearAD + 543;
         
         const prompt = `
-        คุณคือบรรณารักษ์ผู้เชี่ยวชาญการค้นหาหนังสือ 
-        กรุณาค้นหาและแนะนำหนังสือที่มีอยู่จริงบนโลกและมีการตีพิมพ์จริงเท่านั้น จำนวน 1-3 เล่ม ที่ตรงกับเงื่อนไขต่อไปนี้:
-        - คำค้นหาทั่วไป (Keyword): ${keyword || '-'}
+        คุณคือบรรณารักษ์ผู้เชี่ยวชาญการคัดเลือกและแนะนำหนังสือเข้าห้องสมุดมหาวิทยาลัย
+        กรุณาค้นหาและลิสต์รายชื่อหนังสือที่เกี่ยวข้อง ซึ่งมีอยู่จริงบนโลกและมีการตีพิมพ์จริงเท่านั้น จำนวน 3-5 เล่ม ที่ตรงกับเงื่อนไขต่อไปนี้:
+        - คำค้นหาทั่วไป (Keyword): ${keyword || '-'} (หากมีหลายคำค้นหา ให้พิจารณาหนังสือที่เกี่ยวข้องกับทุกคำค้นหา หรือเกี่ยวข้องกับแต่ละคำค้นหา)
         - ชื่อหนังสือ: ${title || '-'}
         - ชื่อผู้แต่ง: ${author || '-'}
         - รหัส ISBN: ${isbn || '-'}
 
-        กฎเหล็ก (สำคัญมาก):
+        กฎเหล็กในการคัดเลือกและเรียงลำดับ (สำคัญมาก):
         1. ห้ามแต่งชื่อหนังสือ ชื่อผู้แต่ง หรือเลข ISBN ขึ้นมาเองเด็ดขาด ต้องเป็นหนังสือที่มีอยู่จริง
-        2. หากไม่พบหนังสือที่มีอยู่จริงที่ตรงกับเงื่อนไข ให้คืนค่าเป็น Array เปล่า [] ทันที ห้ามเดาข้อมูล
-        3. ตอบกลับข้อมูลเป็นรูปแบบ JSON Array เท่านั้น ห้ามมีข้อความหรือคำอธิบายอื่นใดปนเด็ดขาด
+        2. จำกัดเฉพาะหนังสือใหม่ที่ตีพิมพ์ในช่วง 1-2 ปีล่าสุดเท่านั้น คือตั้งแต่ปี ค.ศ. ${minYearAD}-${currentYearAD} (หรือ พ.ศ. ${minYearBE}-${currentYearBE})
+        3. เทคนิคการเรียงลำดับกรณีหนังสือคล้ายกัน: ให้เรียงลำดับจากหนังสือที่มีเนื้อหาตรงกับคำค้นหามากที่สุดขึ้นก่อน และเรียงตามปีที่พิมพ์ใหม่ล่าสุด (Newest First)
+        4. หากไม่พบหนังสือที่มีอยู่จริงตามเงื่อนไข ให้คืนค่าเป็น Array เปล่า [] ทันที ห้ามเดาข้อมูล
+        5. ตอบกลับข้อมูลเป็นรูปแบบ JSON Array เท่านั้น ห้ามมีข้อความหรือคำอธิบายอื่นใดปนเด็ดขาด
         [
             {
                 "book_title": "ชื่อหนังสือภาษาไทยหรืออังกฤษ",
                 "author": "ชื่อผู้แต่ง",
                 "publisher": "ชื่อสำนักพิมพ์",
-                "publish_year": "ปีที่พิมพ์",
+                "publish_year": "ปีที่พิมพ์ (ระบุเป็นตัวเลข 4 หลัก)",
                 "isbn": "รหัส ISBN",
-                "src_web": "PSU dotBlue"
+                "src_web": "PSU dotBlue AI"
             }
         ]
         `;
@@ -46,7 +54,7 @@ exports.recommendBooks = async (searchParams) => {
             body: JSON.stringify({
                 model: "deepseek/deepseek-v4.1-flash",
                 messages: [{ role: "user", content: prompt }],
-                temperature: 0.1 // 🌟 เพิ่มค่านี้เพื่อลดการมั่วข้อมูลของ AI และเน้นความแม่นยำ
+                temperature: 0.1
             })
         });
 
@@ -90,7 +98,10 @@ exports.recommendBooks = async (searchParams) => {
         }
 
         const parsedData = JSON.parse(responseText);
-        const books = Array.isArray(parsedData) ? parsedData : (parsedData.books || Object.values(parsedData)[0] || []);
+        let books = Array.isArray(parsedData) ? parsedData : (parsedData.books || Object.values(parsedData)[0] || []);
+
+        // จัดเรียงหนังสือที่คล้ายกันให้เรียงตามปีที่พิมพ์ใหม่สุดขึ้นก่อนเสมอ (แก้ข้อ 10)
+        books.sort((a, b) => (parseInt(b.publish_year) || 0) - (parseInt(a.publish_year) || 0));
 
         console.log("✅ ค้นหาหนังสือผ่าน dotBlue สำเร็จ:", books);
         return books;

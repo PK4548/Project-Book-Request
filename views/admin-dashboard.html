@@ -10,7 +10,6 @@
     <style>
         :root {
             --uni-blue: #0a4275;
-            /* สีน้ำเงินเข้มสไตล์มหาวิทยาลัย */
             --uni-light-blue: #f0f4f8;
             --text-main: #333333;
             --text-muted: #6c757d;
@@ -23,12 +22,7 @@
             color: var(--text-main);
         }
 
-        /* Layout */
-        .wrapper {
-            display: flex;
-            width: 100%;
-            min-height: 100vh;
-        }
+        .wrapper { display: flex; width: 100%; min-height: 100vh; }
 
         /* Enterprise Sidebar */
         .sidebar {
@@ -53,19 +47,8 @@
             gap: 10px;
         }
 
-        .sidebar-brand:hover {
-            color: white;
-        }
-
-        .nav-menu {
-            padding: 20px 0;
-            flex-grow: 1;
-        }
-
-        .nav-item {
-            margin-bottom: 2px;
-        }
-
+        .nav-menu { padding: 20px 0; flex-grow: 1; }
+        .nav-item { margin-bottom: 2px; }
         .nav-link {
             color: var(--text-main);
             font-weight: 500;
@@ -76,13 +59,7 @@
             border-left: 4px solid transparent;
             transition: all 0.2s;
         }
-
-        .nav-link:hover {
-            background-color: var(--uni-light-blue);
-            color: var(--uni-blue);
-        }
-
-        /* Active State แบบองค์กร */
+        .nav-link:hover { background-color: var(--uni-light-blue); color: var(--uni-blue); }
         .nav-link.active {
             background-color: var(--uni-light-blue);
             color: var(--uni-blue);
@@ -97,19 +74,8 @@
             margin-top: auto;
         }
 
-        .logout-btn:hover {
-            background-color: #fef2f2;
-            color: #dc3545;
-        }
+        .main-content { flex-grow: 1; display: flex; flex-direction: column; }
 
-        /* Main Content */
-        .main-content {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Top Navbar */
         .top-nav {
             background-color: #ffffff;
             padding: 15px 30px;
@@ -119,206 +85,86 @@
             align-items: center;
         }
 
-        .nav-title {
-            font-weight: 600;
-            color: var(--text-muted);
-            margin: 0;
-            font-size: 1rem;
-        }
-
-        .admin-profile {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
+        .nav-title { font-weight: 600; color: var(--text-muted); margin: 0; font-size: 1rem; }
+        .admin-profile { display: flex; align-items: center; gap: 10px; }
         .admin-avatar {
-            width: 32px;
-            height: 32px;
+            width: 32px; height: 32px;
             background: var(--uni-light-blue);
             color: var(--uni-blue);
             border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            border: 1px solid var(--uni-blue);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: bold; border: 1px solid var(--uni-blue);
         }
 
-        /* Dashboard Content */
-        .content-body {
-            padding: 30px 40px;
-        }
+        .content-body { padding: 30px 40px; }
 
-        /* Formal Stat Cards */
         .stat-card {
             background: #fff;
             border-radius: 6px;
             border: 1px solid var(--border-color);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
             padding: 20px;
-            position: relative;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        /* ขอบสีด้านบนของการ์ดเพื่อแยกประเภทชัดเจน */
-        .stat-card.total {
-            border-top: 4px solid var(--uni-blue);
-        }
+        .stat-card.total { border-top: 4px solid var(--uni-blue); }
+        .stat-card.pending { border-top: 4px solid #f59f00; }
+        .stat-card.approved { border-top: 4px solid #28a745; }
 
-        .stat-card.pending {
-            border-top: 4px solid #f59f00;
-        }
-
-        .stat-card.approved {
-            border-top: 4px solid #28a745;
-        }
-
-        .stat-info {
-            display: flex;
-            flex-direction: column;
-        }
-
+        .stat-info { display: flex; flex-direction: column; }
         .stat-label {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 5px;
+            font-size: 0.85rem; font-weight: 600; color: var(--text-muted);
+            text-transform: uppercase; margin-bottom: 5px;
         }
+        .stat-value { font-size: 2.2rem; font-weight: 700; color: var(--text-main); line-height: 1; }
+        .stat-icon { font-size: 2.5rem; opacity: 0.2; }
+        .stat-card.total .stat-icon { color: var(--uni-blue); }
+        .stat-card.pending .stat-icon { color: #f59f00; }
+        .stat-card.approved .stat-icon { color: #28a745; }
 
-        .stat-value {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: var(--text-main);
-            line-height: 1;
-        }
-
-        .stat-icon {
-            font-size: 2.5rem;
-            opacity: 0.2;
-        }
-
-        .stat-card.total .stat-icon {
-            color: var(--uni-blue);
-        }
-
-        .stat-card.pending .stat-icon {
-            color: #f59f00;
-        }
-
-        .stat-card.approved .stat-icon {
-            color: #28a745;
-        }
-
-        /* Formal Table Section */
         .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            margin-top: 30px;
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 15px; margin-top: 30px;
         }
-
         .section-title {
-            font-weight: 600;
-            font-size: 1.1rem;
-            color: var(--text-main);
-            margin: 0;
-            border-left: 4px solid var(--uni-blue);
-            padding-left: 10px;
+            font-weight: 600; font-size: 1.1rem; color: var(--text-main);
+            margin: 0; border-left: 4px solid var(--uni-blue); padding-left: 10px;
         }
 
         .table-container {
-            background: #fff;
-            border-radius: 6px;
-            border: 1px solid var(--border-color);
-            overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
-        }
-
-        .table {
-            margin-bottom: 0;
+            background: #fff; border-radius: 6px; border: 1px solid var(--border-color);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02); height: 100%;
         }
 
         .table thead th {
-            background-color: #f8f9fa;
-            color: var(--text-muted);
-            font-size: 0.8rem;
-            font-weight: 600;
-            padding: 15px 20px;
-            border-bottom: 2px solid var(--border-color);
-            text-transform: uppercase;
+            background-color: #f8f9fa; color: var(--text-muted);
+            font-size: 0.8rem; font-weight: 600; padding: 15px 20px;
+            border-bottom: 2px solid var(--border-color); text-transform: uppercase;
         }
+        .table tbody td { padding: 15px 20px; vertical-align: middle; border-bottom: 1px solid var(--border-color); font-size: 0.95rem; }
+        .table tbody tr:last-child td { border-bottom: none; }
+        .book-title-cell { font-weight: 600; color: var(--uni-blue); }
 
-        .table tbody td {
-            padding: 15px 20px;
-            vertical-align: middle;
-            border-bottom: 1px solid var(--border-color);
-            font-size: 0.95rem;
-        }
-
-        .table tbody tr:last-child td {
-            border-bottom: none;
-        }
-
-        .table tbody tr:hover td {
-            background-color: var(--uni-light-blue);
-        }
-
-        .book-title-cell {
-            font-weight: 600;
-            color: var(--uni-blue);
-        }
-
-        /* Badges for University Standard */
         .badge-status {
-            padding: 5px 12px;
-            border-radius: 4px;
-            font-weight: 600;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border: 1px solid transparent;
+            padding: 5px 12px; border-radius: 4px; font-weight: 600;
+            font-size: 0.75rem; text-transform: uppercase; border: 1px solid transparent;
         }
+        .badge-pending { background: #fff8e6; color: #b06000; border-color: #ffe8a1; }
+        .badge-approved { background: #e6f4ea; color: #137333; border-color: #c3e6cb; }
 
-        .badge-pending {
-            background: #fff8e6;
-            color: #b06000;
-            border-color: #ffe8a1;
+        /* Styles สำหรับ Keyword Analytics */
+        .keyword-list { list-style: none; padding: 0; margin: 0; }
+        .keyword-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 20px; border-bottom: 1px solid var(--border-color);
         }
-
-        .badge-approved {
-            background: #e6f4ea;
-            color: #137333;
-            border-color: #c3e6cb;
-        }
-
-        .btn-outline-primary {
-            border-color: var(--uni-blue);
-            color: var(--uni-blue);
-            font-weight: 500;
-            font-size: 0.85rem;
-            border-radius: 4px;
-        }
-
-        .btn-outline-primary:hover {
-            background-color: var(--uni-blue);
-            color: white;
-        }
-
-        .link-all {
-            text-decoration: none;
-            color: var(--uni-blue);
-            font-weight: 500;
-            font-size: 0.9rem;
-        }
-
-        .link-all:hover {
-            text-decoration: underline;
+        .keyword-item:last-child { border-bottom: none; }
+        .keyword-name { font-weight: 600; color: var(--text-main); }
+        .keyword-count {
+            background-color: var(--uni-light-blue); color: var(--uni-blue);
+            padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: bold;
         }
     </style>
 </head>
@@ -326,7 +172,6 @@
 <body>
 
     <div class="wrapper">
-
         <!-- Enterprise Sidebar -->
         <div class="sidebar">
             <a href="/admin-dashboard.html" class="sidebar-brand">
@@ -336,37 +181,30 @@
                     <div style="font-size: 0.7rem; font-weight: normal; opacity: 0.8;">Book Request System</div>
                 </div>
             </a>
-
             <div class="nav-menu flex-column">
                 <div class="nav-item">
-                    <a href="/admin-dashboard.html" class="nav-link active"><i class="bi bi-grid-1x2"></i> หน้าหลัก
-                        (Dashboard)</a>
+                    <a href="/admin-dashboard.html" class="nav-link active"><i class="bi bi-grid-1x2"></i> หน้าหลัก (Dashboard)</a>
                 </div>
                 <div class="nav-item">
                     <a href="/request-management.html" class="nav-link"><i class="bi bi-inboxes"></i> จัดการคำร้อง</a>
                 </div>
                 <div class="nav-item">
-                    <a href="/import-excel.html" class="nav-link"><i class="bi bi-file-earmark-spreadsheet"></i>
-                        นำเข้าฐานข้อมูล (Excel)</a>
+                    <a href="/import-excel.html" class="nav-link"><i class="bi bi-file-earmark-spreadsheet"></i> นำเข้าฐานข้อมูล (Excel)</a>
                 </div>
             </div>
-
             <div class="nav-item mb-3">
-                <a href="#" class="nav-link logout-btn" onclick="logout()"><i class="bi bi-box-arrow-right"></i>
-                    ออกจากระบบ</a>
+                <a href="#" class="nav-link logout-btn" onclick="logout()"><i class="bi bi-box-arrow-right"></i> ออกจากระบบ</a>
             </div>
         </div>
 
         <!-- Main Content -->
         <div class="main-content">
-
             <!-- Top Navbar -->
             <div class="top-nav">
                 <h2 class="nav-title">ระบบบริหารจัดการคำร้องเสนอหนังสือ</h2>
                 <div class="admin-profile">
                     <div class="text-end me-2">
-                        <div class="text-dark fw-bold small" id="adminNameDisplay" style="line-height: 1;">Administrator
-                        </div>
+                        <div class="text-dark fw-bold small" id="adminNameDisplay" style="line-height: 1;">Administrator</div>
                         <div class="text-muted" style="font-size: 0.7rem;">บรรณารักษ์</div>
                     </div>
                     <div class="admin-avatar"><i class="bi bi-person"></i></div>
@@ -375,19 +213,18 @@
 
             <!-- Content Body -->
             <div class="content-body">
-
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
                         <h3 class="fw-bold" style="color: var(--text-main);">ภาพรวมระบบ (Overview)</h3>
-                        <p class="text-muted small mb-0">ข้อมูลสถิติคำร้องเสนอหนังสือเข้าห้องสมุด</p>
+                        <p class="text-muted small mb-0">ข้อมูลสถิติคำร้องและแนวโน้มการค้นหาหนังสือ</p>
                     </div>
-                    <button class="btn btn-outline-primary shadow-sm" onclick="loadDashboardData()">
+                    <button class="btn btn-outline-primary" onclick="loadDashboardData()">
                         <i class="bi bi-arrow-clockwise me-1"></i> รีเฟรชข้อมูล
                     </button>
                 </div>
 
                 <!-- Formal Stat Cards -->
-                <div class="row g-4">
+                <div class="row g-4 mb-4">
                     <div class="col-md-4">
                         <div class="stat-card total">
                             <div class="stat-info">
@@ -417,31 +254,48 @@
                     </div>
                 </div>
 
-                <!-- Table Section -->
-                <div class="section-header">
-                    <h4 class="section-title">รายการคำร้องล่าสุด</h4>
-                    <a href="/request-management.html" class="link-all">ดูทั้งหมด <i class="bi bi-chevron-right"
-                            style="font-size: 0.8rem;"></i></a>
-                </div>
+                <div class="row g-4">
+                    <!-- Table Section (คำร้องล่าสุด) -->
+                    <div class="col-lg-8">
+                        <div class="section-header mt-0">
+                            <h4 class="section-title">รายการคำร้องล่าสุด</h4>
+                            <a href="/request-management.html" class="text-decoration-none fw-semibold">ดูทั้งหมด <i class="bi bi-chevron-right"></i></a>
+                        </div>
+                        <div class="table-container">
+                            <table class="table mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="ps-4">รหัสอ้างอิง</th>
+                                        <th>รายการหนังสือ</th>
+                                        <th>ผู้เสนอคำร้อง</th>
+                                        <th class="text-center">สถานะ</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recentTable">
+                                    <tr>
+                                        <td colspan="4" class="text-center py-5">
+                                            <div class="spinner-border text-primary" style="width: 2rem; height: 2rem;"></div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
 
-                <div class="table-container">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th class="ps-4" style="width: 15%;">รหัสอ้างอิง</th>
-                                <th style="width: 40%;">รายการหนังสือ</th>
-                                <th style="width: 25%;">ผู้เสนอคำร้อง</th>
-                                <th class="text-center" style="width: 20%;">สถานะ</th>
-                            </tr>
-                        </thead>
-                        <tbody id="recentTable">
-                            <tr>
-                                <td colspan="4" class="text-center py-5">
-                                    <div class="spinner-border text-primary" style="width: 2rem; height: 2rem;"></div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <!-- Analytics Section (คำค้นหายอดนิยม แก้ข้อ 5) -->
+                    <div class="col-lg-4">
+                        <div class="section-header mt-0">
+                            <h4 class="section-title">เทรนด์คำค้นหายอดนิยม</h4>
+                        </div>
+                        <div class="table-container d-flex flex-column h-100">
+                            <div class="p-3 bg-light border-bottom">
+                                <small class="text-muted"><i class="bi bi-bar-chart-fill text-primary me-1"></i>วิเคราะห์จากประวัติการค้นหาของนักศึกษา</small>
+                            </div>
+                            <ul class="keyword-list flex-grow-1" id="topKeywordsList">
+                                <li class="text-center py-5 text-muted">กำลังโหลดข้อมูล...</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
 
             </div>
@@ -454,7 +308,6 @@
         const user = getUser();
         if (user) document.getElementById('adminNameDisplay').innerText = user.full_name || 'Administrator';
 
-        // ฟังก์ชันลูกเล่นตัวเลขวิ่ง (คงไว้เพราะดูเป็นมืออาชีพ)
         function animateValue(obj, start, end, duration) {
             let startTimestamp = null;
             const step = (timestamp) => {
@@ -468,44 +321,47 @@
 
         async function loadDashboardData() {
             try {
-                const res = await fetch('/api/admin/requests', { headers: { 'Authorization': `Bearer ${getToken()}` } });
-                if (res.ok) {
-                    const result = await res.json();
-                    const requests = result.data || [];
+                // ดึงข้อมูลคำร้องล่าสุดเพื่อโชว์ในตาราง
+                const reqRes = await fetch('/api/admin/requests', { headers: { 'Authorization': `Bearer ${getToken()}` } });
+                
+                // ดึงสถิติ Dashboard (รวม Top Keywords ด้วย)
+                const statRes = await fetch('/api/admin/dashboard', { headers: { 'Authorization': `Bearer ${getToken()}` } });
 
-                    const total = requests.length;
-                    const pending = requests.filter(r => r.status === 'pending').length;
-                    const approved = requests.filter(r => r.status === 'approved').length;
+                if (reqRes.ok && statRes.ok) {
+                    const reqResult = await reqRes.json();
+                    const statResult = await statRes.json();
+                    
+                    const requests = reqResult.data || [];
+                    const stats = statResult.data || {};
+                    const topKeywords = stats.top_keywords || [];
 
-                    animateValue(document.getElementById('statTotal'), 0, total, 800);
-                    animateValue(document.getElementById('statPending'), 0, pending, 800);
-                    animateValue(document.getElementById('statApproved'), 0, approved, 800);
+                    // วาดสถิติตัวเลขด้านบน
+                    animateValue(document.getElementById('statTotal'), 0, stats.total_requests || 0, 800);
+                    animateValue(document.getElementById('statPending'), 0, stats.pending || 0, 800);
+                    animateValue(document.getElementById('statApproved'), 0, stats.approved || 0, 800);
 
+                    // วาดตารางคำร้อง 5 รายการล่าสุด
                     renderTable(requests.slice(0, 5));
+
+                    // วาดลิสต์คำค้นหายอดนิยม (แก้ข้อ 5)
+                    renderTopKeywords(topKeywords);
+
                 } else {
-                    throw new Error("API not ready");
+                    throw new Error("API failed");
                 }
             } catch (e) {
-                console.log("ใช้งานข้อมูลจำลอง (Mock Data)");
-
-                animateValue(document.getElementById('statTotal'), 0, 25, 800);
-                animateValue(document.getElementById('statPending'), 0, 8, 800);
-                animateValue(document.getElementById('statApproved'), 0, 12, 800);
-
-                const mockData = [
-                    { id: 'BR-260801', title: 'Python เบื้องต้น', author: 'สมชาย ใจดี', user: 'สมชาย ใจดี', status: 'pending' },
-                    { id: 'BR-260802', title: 'AI Fundamentals', author: 'Nadia', user: 'จินตนา สุขเกษม', status: 'approved' },
-                    { id: 'BR-260803', title: 'Cloud Architecture', author: 'AWS', user: 'นรินทร์ พงษ์ศิริ', status: 'pending' },
-                    { id: 'BR-260804', title: 'สี่แผ่นดิน (ฉบับสมบูรณ์) เล่ม 1', author: 'ม.ร.ว. คึกฤทธิ์', user: 'วิภาวี แสงจันทร์', status: 'pending' },
-                    { id: 'BR-260805', title: 'Principles of Sustainable Agriculture', author: 'John', user: 'อรรถพล มั่นคง', status: 'approved' }
-                ];
-                renderTable(mockData);
+                console.error("โหลดข้อมูลล้มเหลว:", e);
+                document.getElementById('topKeywordsList').innerHTML = '<li class="text-center py-4 text-danger">ไม่สามารถโหลดข้อมูลสถิติได้</li>';
             }
         }
 
         function renderTable(data) {
             const tbody = document.getElementById('recentTable');
             tbody.innerHTML = '';
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-muted">ยังไม่มีรายการคำร้อง</td></tr>';
+                return;
+            }
 
             data.forEach(req => {
                 const displayId = req.request_id;
@@ -525,6 +381,31 @@
                     <td class="text-center">${badgeHtml}</td>
                 </tr>
             `;
+            });
+        }
+
+        // ฟังก์ชันใหม่สำหรับวาดสถิติคำค้นหา
+        function renderTopKeywords(keywords) {
+            const list = document.getElementById('topKeywordsList');
+            list.innerHTML = '';
+            
+            if (keywords.length === 0) {
+                list.innerHTML = '<li class="text-center py-4 text-muted">ยังไม่มีข้อมูลการค้นหา</li>';
+                return;
+            }
+
+            keywords.forEach((item, index) => {
+                // ใส่ลูกเล่นให้ 3 อันดับแรกมีเหรียญรางวัล
+                let rankIcon = `<span class="text-muted fw-bold me-2">#${index + 1}</span>`;
+                if (index === 0) rankIcon = `<i class="bi bi-trophy-fill text-warning me-2"></i>`;
+                else if (index === 1) rankIcon = `<i class="bi bi-trophy-fill text-secondary me-2"></i>`;
+                else if (index === 2) rankIcon = `<i class="bi bi-trophy-fill me-2" style="color: #cd7f32;"></i>`;
+
+                list.innerHTML += `
+                <li class="keyword-item">
+                    <div class="keyword-name">${rankIcon} ${item.keyword}</div>
+                    <div class="keyword-count" title="ถูกค้นหา ${item.search_count} ครั้ง">${item.search_count} ครั้ง</div>
+                </li>`;
             });
         }
 

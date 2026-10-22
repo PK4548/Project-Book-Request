@@ -4,12 +4,10 @@ exports.searchBooks = async ({ keyword, title, author, isbn }) => {
     let sql = 'SELECT * FROM library_book WHERE 1=1';
     const params = [];
 
-    // ISBN ใช้การค้นหาแบบ Exact Match (ตรงกันเป๊ะ)
     if (isbn) {
         sql += ' AND isbn = ?';
         params.push(isbn);
     }
-    // ตัวอื่นๆ ใช้แบบ Partial Match (มีคำนี้ผสมอยู่)
     if (title) {
         sql += ' AND title LIKE ?';
         params.push(`%${title}%`);
@@ -18,23 +16,27 @@ exports.searchBooks = async ({ keyword, title, author, isbn }) => {
         sql += ' AND author LIKE ?';
         params.push(`%${author}%`);
     }
-    // Keyword จะค้นหาครอบคลุมหลายฟิลด์
+
+    // หั่นคำด้วยช่องว่าง แล้วใช้ AND เชื่อม (ต้องมีครบทุกคำที่พิมพ์ ถึงจะแสดงผล)
     if (keyword) {
-        sql += ' AND (title LIKE ? OR author LIKE ? OR category LIKE ?)';
-        params.push(`%${keyword}%`, `%${keyword}%`, `%${keyword}%`);
+        const keywords = keyword.trim().split(/\s+/).filter(Boolean);
+        keywords.forEach(kw => {
+            sql += ' AND (title LIKE ? OR author LIKE ? OR category LIKE ?)';
+            // ใส่พารามิเตอร์ 3 ตัว สำหรับ title, author, category
+            params.push(`%${kw}%`, `%${kw}%`, `%${kw}%`);
+        });
     }
+
+    sql += ' ORDER BY publish_year DESC, title ASC';
 
     const [rows] = await db.query(sql, params);
     return rows;
 };
 
-// เพิ่มต่อจากโค้ดที่มีอยู่เดิม
-
 exports.findBookForImport = async (isbn, title) => {
     let sql = 'SELECT library_book_id FROM library_book WHERE ';
     const params = [];
 
-    // ถ้ามี ISBN ให้หาด้วย ISBN ก่อน ถ้าไม่มีให้หาจาก ชื่อหนังสือ (Title)
     if (isbn && isbn.trim() !== "") {
         sql += 'isbn = ?';
         params.push(isbn.trim());

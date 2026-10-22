@@ -51,19 +51,16 @@ exports.getRequestById = async (requestId) => {
         WHERE br.request_id = ?
     `;
     const [rows] = await db.query(sql, [requestId]);
-    return rows[0]; // คืนค่าเป็น Object เดียว
+    return rows[0]; 
 };
 
 // 3. อัปเดตสถานะและเพิ่ม Admin Note
 exports.updateRequestStatus = async (requestId, status, adminNote) => {
-    // เพิ่ม admin_note เข้าไปในคำสั่งอัปเดต
     const sql = `
         UPDATE book_request 
         SET status = ?, admin_note = ?, updated_at = NOW() 
         WHERE request_id = ?
     `;
-    
-    // adminNote ถ้าไม่มีค่า (กรณีอนุมัติ) ให้เป็น null
     const [result] = await db.execute(sql, [status, adminNote || null, requestId]);
     return result;
 };
@@ -82,7 +79,6 @@ exports.getDashboardStats = async () => {
     `;
     const [rows] = await db.query(sql);
     
-    // ป้องกันค่า null กรณีที่ยังไม่มีข้อมูลในตารางเลย ให้แปลงเป็น 0
     const stats = rows[0];
     return {
         total_requests: Number(stats.total_requests) || 0,
@@ -92,4 +88,19 @@ exports.getDashboardStats = async () => {
         ordering: Number(stats.ordering) || 0,
         completed: Number(stats.completed) || 0
     };
+};
+
+// 5. ดึงคำค้นหายอดนิยม (แก้ข้อ 5 ของอาจารย์)
+exports.getTopKeywords = async () => {
+    // ใช้ GROUP BY จัดกลุ่ม keyword และนับจำนวนครั้งที่ค้นหา เรียงจากมากไปน้อย 5 อันดับแรก
+    const sql = `
+        SELECT keyword, COUNT(*) as search_count
+        FROM search_cache 
+        WHERE keyword IS NOT NULL AND keyword != ''
+        GROUP BY keyword
+        ORDER BY search_count DESC
+        LIMIT 5
+    `;
+    const [rows] = await db.query(sql);
+    return rows;
 };
